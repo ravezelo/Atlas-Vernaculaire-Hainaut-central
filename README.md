@@ -1,1 +1,1 @@
-# Atlas-Vernaculaire-Hainaut-central
+# Atlas-Vernaculaire-HainautCentral
