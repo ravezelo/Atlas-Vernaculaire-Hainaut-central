@@ -34,7 +34,6 @@
     flex-direction: column;
   }
 
-  /* ── HEADER ── */
   header {
     display: flex;
     align-items: center;
@@ -51,10 +50,7 @@
     letter-spacing: .04em;
     font-weight: 400;
   }
-  header h1 span {
-    font-style: italic;
-    color: #c8b99a;
-  }
+  header h1 span { font-style: italic; color: #c8b99a; }
   .header-sub {
     font-size: 11px;
     color: #9a9080;
@@ -62,45 +58,38 @@
     text-transform: uppercase;
   }
 
-  /* ── MAP ── */
-  #map {
-    flex: 1;
-    width: 100%;
-  }
+  #map { flex: 1; width: 100%; }
 
-  /* ── MARKER ── */
+  /* MARKER — dessin 3D */
   .marker-wrap {
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
     transition: transform .2s;
+    filter: drop-shadow(2px 3px 4px rgba(0,0,0,.3));
   }
-  .marker-wrap:hover { transform: scale(1.08); }
+  .marker-wrap:hover { transform: scale(1.06) translateY(-3px); }
   .marker-img {
-    width: 72px;
-    height: 72px;
-    border-radius: 4px;
-    border: 2px solid var(--ink);
-    background: white;
-    object-fit: cover;
-    box-shadow: 3px 3px 0 rgba(0,0,0,.25);
+    width: 110px;
+    height: auto;
+    object-fit: contain;
   }
   .marker-label {
-    margin-top: 4px;
+    margin-top: 2px;
     font-size: 10px;
     font-weight: 500;
     letter-spacing: .08em;
     color: var(--ink);
     background: var(--paper);
     border: 1px solid var(--ink);
-    padding: 2px 7px;
+    padding: 2px 8px;
     border-radius: 2px;
     white-space: nowrap;
     box-shadow: 1px 1px 0 rgba(0,0,0,.15);
   }
 
-  /* ── PANEL ── */
+  /* PANEL */
   #panel {
     position: fixed;
     top: 0; right: -480px;
@@ -119,10 +108,12 @@
   .panel-cover {
     width: 100%;
     height: 220px;
-    object-fit: cover;
+    object-fit: contain;
+    object-position: center;
     flex-shrink: 0;
     border-bottom: 2px solid var(--ink);
-    background: #ddd;
+    background: linear-gradient(135deg, #e8e0d4 0%, #d4c8b4 100%);
+    padding: 12px;
   }
   .panel-cover-fallback {
     width: 100%;
@@ -130,13 +121,12 @@
     flex-shrink: 0;
     border-bottom: 2px solid var(--ink);
     background: linear-gradient(135deg, #e8e0d4 0%, #d4c8b4 100%);
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     font-family: 'Playfair Display', serif;
     font-size: 32px;
     color: var(--stone);
-    letter-spacing: .1em;
   }
 
   .panel-body {
@@ -212,7 +202,6 @@
     font-style: italic;
   }
 
-  /* ── SECTION LABELS ── */
   .section-label {
     font-size: 10px;
     letter-spacing: .16em;
@@ -221,7 +210,6 @@
     margin-bottom: 10px;
   }
 
-  /* ── BOUTONS ANALYSE ── */
   .btn-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -251,11 +239,10 @@
   .btn-analyse .btn-text strong { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
   .btn-analyse .btn-text span { font-size: 10px; opacity: .7; margin-top: 1px; }
 
-  .btn-histoire  { background: var(--vert-bg);   color: var(--vert);   border-color: var(--vert); }
-  .btn-territoire{ background: var(--bleu-bg);   color: var(--bleu);   border-color: var(--bleu); }
-  .btn-batiment  { background: var(--orange-bg); color: var(--orange); border-color: var(--orange); }
+  .btn-histoire   { background: var(--vert-bg);   color: var(--vert);   border-color: var(--vert); }
+  .btn-territoire { background: var(--bleu-bg);   color: var(--bleu);   border-color: var(--bleu); }
+  .btn-batiment   { background: var(--orange-bg); color: var(--orange); border-color: var(--orange); }
 
-  /* AVENIR pleine largeur */
   .btn-avenir {
     display: flex;
     align-items: center;
@@ -273,7 +260,6 @@
     text-transform: uppercase;
     transition: transform .15s, box-shadow .15s, background .15s;
     width: 100%;
-    margin-top: 0;
   }
   .btn-avenir:hover {
     background: var(--rouge);
@@ -281,9 +267,7 @@
     transform: translateY(-2px);
     box-shadow: 4px 4px 0 rgba(160,0,30,.25);
   }
-  .btn-avenir .avenir-arrow { font-size: 20px; }
 
-  /* ── DIVIDER ── */
   .divider {
     border: none;
     border-top: 1px solid #ddd;
@@ -303,23 +287,20 @@
 
 <div id="map"></div>
 
-<!-- PANEL LATÉRAL -->
 <div id="panel">
   <button class="panel-close" onclick="closePanel()" title="Fermer">✕</button>
-  <img id="panel-img" class="panel-cover" src="" alt="" onerror="this.style.display='none'; document.getElementById('panel-cover-fallback').style.display='flex';">
-  <div id="panel-cover-fallback" class="panel-cover-fallback" style="display:none">❧</div>
+  <img id="panel-img" class="panel-cover" src="" alt=""
+       onerror="this.style.display='none'; document.getElementById('panel-cover-fallback').style.display='flex';">
+  <div id="panel-cover-fallback" class="panel-cover-fallback">❧</div>
 
   <div class="panel-body">
     <div class="panel-tag" id="panel-commune">Virginal · Ittre</div>
     <div class="panel-title" id="panel-title">—</div>
     <div class="panel-date" id="panel-date">—</div>
-
     <div class="panel-meta" id="panel-meta"></div>
-
     <div class="panel-synth" id="panel-synth">—</div>
 
     <hr class="divider">
-
     <div class="section-label">Analyse</div>
     <div class="btn-grid">
       <a id="btn-histoire"   class="btn-analyse btn-histoire"   href="#" target="_blank">
@@ -334,16 +315,13 @@
         <span class="btn-icon">🧱</span>
         <span class="btn-text"><strong>Bâtiment</strong><span>Construction</span></span>
       </a>
-      <!-- placeholder 4e cellule pour équilibre visuel -->
       <div></div>
     </div>
 
     <hr class="divider" style="margin-top:4px">
     <div class="section-label">Synthèse projective</div>
     <a id="btn-avenir" class="btn-avenir" href="#" target="_blank">
-      <span class="avenir-arrow">✦</span>
-      AVENIR
-      <span class="avenir-arrow">→</span>
+      <span>✦</span> AVENIR <span>→</span>
     </a>
   </div>
 </div>
@@ -354,26 +332,26 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiZWxvcnZ6IiwiYSI6ImNtcHZ0bGJieDFxbjcycnNldmRyM
 const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/outdoors-v12',
-  center: [4.3717, 50.6003],
+  center: [4.1991, 50.6340],
   zoom: 14,
-  pitch: 30,
-  bearing: -10
+  pitch: 40,
+  bearing: -5
 });
 
 map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
 
-// ── DONNÉES BÂTIMENTS ──
 const buildings = [
   {
-    id: 'dujaquier',
-    name: 'Maison Dujaquier & Flandroy',
+    id: 'virginal-bruyere',
+    name: 'Virginal — Bruyère',
     commune: 'Virginal · Ittre',
     date: 'Construite en 1875',
     materiaux: ['Brique locale', 'Pierre bleue de Soignies', 'Charpente chêne'],
     occupants: '4 occupants documentés (1875–2026)',
     synth: 'Maison de village en brique locale, implantée en bordure de la Rue Bruyère. Témoin des savoir-faire du Hainaut Central : appareillage soigné, pierre bleue de Soignies en seuil et linteaux, charpente en chêne de la région.',
-    lngLat: [4.3717, 50.6003],
-    facadeUrl: 'https://drive.google.com/uc?export=view&id=1mthirerLjlqNZkwVIeSM_Zgo4wrthdsd',
+    lngLat: [4.1991, 50.6340],
+    // Image 3D dessinée — à remplacer par l'URL Drive de ton dessin axonométrique
+    facadeUrl: 'https://ravezelo.github.io/Atlas-Vernaculaire-Hainaut-central/facade_virginal.png',
     links: {
       histoire:   'https://drive.google.com/file/d/1Zacab9WWccs5JM38gJQ3QXWosusPo7R8/view?usp=share_link',
       territoire: 'https://drive.google.com/file/d/1_E3ASWCCZ_gaPEHDut33PGVxaQ2Vp7u6/view?usp=share_link',
@@ -381,10 +359,8 @@ const buildings = [
       avenir:     'https://drive.google.com/file/d/159kcLto1pJvtusVJyo5Qre_xDsZPtiZU/view?usp=share_link'
     }
   }
-  // → Ajouter d'autres bâtiments ici
 ];
 
-// ── CRÉATION MARQUEURS ──
 buildings.forEach(b => {
   const el = document.createElement('div');
   el.className = 'marker-wrap';
@@ -393,15 +369,20 @@ buildings.forEach(b => {
   img.className = 'marker-img';
   img.src = b.facadeUrl;
   img.alt = b.name;
-  img.onerror = () => { img.src = ''; img.style.background = '#e8e0d4'; };
+  img.onerror = () => {
+    img.style.display = 'none';
+    const fallback = document.createElement('div');
+    fallback.style.cssText = 'width:80px;height:80px;background:#e8e0d4;border:2px solid #1C1C1C;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:24px;';
+    fallback.textContent = '🏠';
+    el.insertBefore(fallback, lbl);
+  };
 
   const lbl = document.createElement('div');
   lbl.className = 'marker-label';
-  lbl.textContent = b.name.split(' ')[1] || b.name; // court label
+  lbl.textContent = b.name;
 
   el.appendChild(img);
   el.appendChild(lbl);
-
   el.addEventListener('click', () => openPanel(b));
 
   new mapboxgl.Marker({ element: el, anchor: 'bottom' })
@@ -409,9 +390,7 @@ buildings.forEach(b => {
     .addTo(map);
 });
 
-// ── PANEL ──
 function openPanel(b) {
-  // Image
   const pImg = document.getElementById('panel-img');
   const pFallback = document.getElementById('panel-cover-fallback');
   pImg.style.display = 'block';
@@ -422,29 +401,24 @@ function openPanel(b) {
   document.getElementById('panel-title').textContent = b.name;
   document.getElementById('panel-date').textContent = b.date + ' · ' + b.occupants;
 
-  // Chips matériaux
   const metaEl = document.getElementById('panel-meta');
   metaEl.innerHTML = b.materiaux.map(m => `<span class="meta-chip">${m}</span>`).join('');
 
   document.getElementById('panel-synth').textContent = b.synth;
-
   document.getElementById('btn-histoire').href   = b.links.histoire;
   document.getElementById('btn-territoire').href = b.links.territoire;
   document.getElementById('btn-batiment').href   = b.links.batiment;
   document.getElementById('btn-avenir').href     = b.links.avenir;
 
   document.getElementById('panel').classList.add('open');
-
-  // Zoom sur le marqueur
-  map.flyTo({ center: b.lngLat, zoom: 16, pitch: 45, speed: 0.9 });
+  map.flyTo({ center: b.lngLat, zoom: 16.5, pitch: 50, speed: 0.9 });
 }
 
 function closePanel() {
   document.getElementById('panel').classList.remove('open');
-  map.flyTo({ zoom: 14, pitch: 30, speed: 0.7 });
+  map.flyTo({ zoom: 14, pitch: 40, speed: 0.7 });
 }
 
-// Fermer avec Échap
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
 </script>
 </body>
