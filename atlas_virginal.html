@@ -6,26 +6,36 @@
 <title>Atlas Vernaculaire — Wallonie</title>
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Caveat:wght@400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --vert:    #2D6A2D;
-    --vert-bg: #EEF6EE;
-    --bleu:    #1A3F8F;
-    --bleu-bg: #EBF0FA;
-    --orange:  #B85C00;
-    --orange-bg: #FEF3E6;
-    --rouge:   #A0001E;
-    --rouge-bg: #FDEAEA;
-    --ink:     #1C1C1C;
-    --paper:   #F8F5EF;
-    --stone:   #9C9080;
+    /* Palette terracotta / brique wallonne */
+    --terra:      #C1440E;
+    --terra-dark: #8B2E06;
+    --terra-light:#F2E0D6;
+    --terra-mid:  #E8C4AD;
+    --stone:      #7A6A5A;
+    --stone-light:#EDE5DA;
+    --ink:        #2A1F16;
+    --paper:      #FAF6F0;
+    --cream:      #F3EDE3;
+    --white:      #FFFCF8;
+
+    /* Analyse colors — harmonisés avec terracotta */
+    --vert:       #3A6B35;
+    --vert-bg:    #EAF2E8;
+    --bleu:       #1C4480;
+    --bleu-bg:    #E8EFF8;
+    --orange:     #C1440E;
+    --orange-bg:  #F9EDE7;
+    --rouge:      #8B2E06;
+    --rouge-bg:   #F5E2DA;
   }
 
   body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Playfair Display', serif;
     background: var(--paper);
     color: var(--ink);
     height: 100vh;
@@ -34,182 +44,254 @@
     flex-direction: column;
   }
 
+  /* ── HEADER ── */
   header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 28px;
-    background: var(--ink);
+    padding: 0 32px;
+    height: 58px;
+    background: var(--terra-dark);
     color: var(--paper);
     z-index: 10;
     flex-shrink: 0;
+    border-bottom: 3px solid var(--terra);
   }
+
+  .header-left { display: flex; flex-direction: column; gap: 2px; }
+
   header h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    letter-spacing: .04em;
-    font-weight: 400;
+    font-family: 'Caveat', cursive;
+    font-size: 24px;
+    letter-spacing: .05em;
+    font-weight: 700;
+    color: var(--paper);
+    line-height: 1;
   }
-  header h1 span { font-style: italic; color: #c8b99a; }
+  header h1 em {
+    font-style: italic;
+    color: #FFFFFF;
+  }
   .header-sub {
-    font-size: 11px;
-    color: #9a9080;
-    letter-spacing: .12em;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    color: var(--terra-mid);
+    letter-spacing: .14em;
+    font-weight: 400;
     text-transform: uppercase;
   }
+  .header-right {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    color: var(--terra-light);
+    text-align: right;
+    line-height: 1.6;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    opacity: .85;
+  }
 
+  /* ── MAP ── */
   #map { flex: 1; width: 100%; }
 
-  /* MARKER — dessin 3D */
+  /* ── MARKER ── */
   .marker-wrap {
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
-    transition: transform .2s;
-    filter: drop-shadow(2px 3px 4px rgba(0,0,0,.3));
+    transition: transform .25s cubic-bezier(.34,1.56,.64,1);
+    filter: drop-shadow(2px 4px 6px rgba(42,31,22,.35));
   }
-  .marker-wrap:hover { transform: scale(1.06) translateY(-3px); }
+  .marker-wrap:hover { transform: scale(1.08) translateY(-4px); }
+
   .marker-img {
-    width: 110px;
+    width: 120px;
     height: auto;
     object-fit: contain;
+    border-radius: 3px;
   }
-  .marker-label {
-    margin-top: 2px;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: .08em;
-    color: var(--ink);
-    background: var(--paper);
-    border: 1px solid var(--ink);
-    padding: 2px 8px;
-    border-radius: 2px;
-    white-space: nowrap;
-    box-shadow: 1px 1px 0 rgba(0,0,0,.15);
+  /* Fallback si image absente */
+  .marker-fallback {
+    width: 90px; height: 70px;
+    background: var(--terra-light);
+    border: 2px solid var(--terra);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
   }
 
-  /* PANEL */
+  .marker-label {
+    margin-top: 3px;
+    font-family: 'Caveat', cursive;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--white);
+    border: 1.5px solid var(--terra);
+    padding: 2px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    box-shadow: 1px 2px 0 rgba(193,68,14,.2);
+    letter-spacing: .04em;
+  }
+
+  /* ── PANEL ── */
   #panel {
     position: fixed;
-    top: 0; right: -480px;
-    width: 460px;
+    top: 0; right: -490px;
+    width: 470px;
     height: 100vh;
     background: var(--paper);
-    border-left: 2px solid var(--ink);
+    border-left: 3px solid var(--terra);
     z-index: 100;
     display: flex;
     flex-direction: column;
-    transition: right .4s cubic-bezier(.4,0,.2,1);
+    transition: right .42s cubic-bezier(.4,0,.2,1);
     overflow: hidden;
   }
   #panel.open { right: 0; }
 
-  .panel-cover {
+  /* Cover — zone image dessin 3D */
+  .panel-cover-zone {
     width: 100%;
-    height: 220px;
-    object-fit: contain;
-    object-position: center;
+    height: 230px;
     flex-shrink: 0;
-    border-bottom: 2px solid var(--ink);
-    background: linear-gradient(135deg, #e8e0d4 0%, #d4c8b4 100%);
-    padding: 12px;
-  }
-  .panel-cover-fallback {
-    width: 100%;
-    height: 220px;
-    flex-shrink: 0;
-    border-bottom: 2px solid var(--ink);
-    background: linear-gradient(135deg, #e8e0d4 0%, #d4c8b4 100%);
-    display: none;
+    background: linear-gradient(160deg, var(--cream) 0%, var(--terra-light) 100%);
+    border-bottom: 2px solid var(--terra-mid);
+    display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Playfair Display', serif;
-    font-size: 32px;
+    overflow: hidden;
+    position: relative;
+  }
+  .panel-cover-zone::before {
+    /* grain texture subtil */
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  #panel-img {
+    max-width: 92%;
+    max-height: 210px;
+    object-fit: contain;
+    filter: drop-shadow(3px 4px 8px rgba(42,31,22,.2));
+    position: relative;
+    z-index: 1;
+  }
+  #panel-img-fallback {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
     color: var(--stone);
   }
-
-  .panel-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 24px 28px 32px;
+  #panel-img-fallback .fallback-icon { font-size: 48px; }
+  #panel-img-fallback span {
+    font-family: 'Caveat', cursive;
+    font-size: 15px;
+    color: var(--stone);
   }
 
   .panel-close {
     position: absolute;
-    top: 12px; left: 12px;
-    background: var(--ink);
-    color: var(--paper);
+    top: 10px; left: 10px;
+    background: var(--terra);
+    color: white;
     border: none;
-    width: 32px; height: 32px;
+    width: 30px; height: 30px;
     border-radius: 50%;
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     z-index: 10;
     transition: background .15s;
+    box-shadow: 0 2px 6px rgba(0,0,0,.2);
   }
-  .panel-close:hover { background: #444; }
+  .panel-close:hover { background: var(--terra-dark); }
+
+  /* Body */
+  .panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 26px 32px;
+  }
 
   .panel-tag {
     display: inline-block;
-    font-size: 10px;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: var(--stone);
-    border: 1px solid #c8b99a;
-    padding: 3px 9px;
+    font-family: 'Caveat', cursive;
+    font-size: 13px;
+    letter-spacing: .08em;
+    color: var(--terra);
+    border: 1.5px solid var(--terra-mid);
+    background: var(--terra-light);
+    padding: 2px 12px;
     border-radius: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
 
   .panel-title {
     font-family: 'Playfair Display', serif;
-    font-size: 26px;
-    font-weight: 700;
-    line-height: 1.2;
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.15;
     margin-bottom: 4px;
+    color: var(--terra-dark);
   }
   .panel-date {
-    font-size: 12px;
+    font-family: 'Caveat', cursive;
+    font-size: 14px;
     color: var(--stone);
     margin-bottom: 14px;
-    letter-spacing: .06em;
+    letter-spacing: .04em;
   }
 
   .panel-meta {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
     margin-bottom: 16px;
   }
   .meta-chip {
+    font-family: 'Playfair Display', serif;
     font-size: 11px;
-    background: white;
-    border: 1px solid #ddd;
+    background: var(--white);
+    border: 1px solid var(--terra-mid);
     border-radius: 3px;
-    padding: 4px 10px;
-    color: #555;
+    padding: 3px 10px;
+    color: var(--terra-dark);
   }
 
   .panel-synth {
-    font-size: 14px;
-    line-height: 1.7;
-    color: #3a3228;
-    border-left: 3px solid #c8b99a;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: #3a2c22;
+    border-left: 3px solid var(--terra);
     padding-left: 14px;
-    margin-bottom: 24px;
+    margin-bottom: 22px;
     font-style: italic;
+    background: var(--terra-light);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--terra-mid);
+    margin: 18px 0;
   }
 
   .section-label {
-    font-size: 10px;
-    letter-spacing: .16em;
+    font-family: 'Caveat', cursive;
+    font-size: 14px;
+    letter-spacing: .12em;
     text-transform: uppercase;
     color: var(--stone);
     margin-bottom: 10px;
   }
 
+  /* ── BOUTONS ANALYSE ── */
   .btn-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -220,24 +302,34 @@
   .btn-analyse {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 14px;
+    gap: 9px;
+    padding: 11px 13px;
     border-radius: 6px;
     border: 2px solid;
     text-decoration: none;
-    font-weight: 500;
-    font-size: 13px;
     transition: transform .15s, box-shadow .15s;
     cursor: pointer;
   }
   .btn-analyse:hover {
     transform: translateY(-2px);
-    box-shadow: 3px 3px 0 rgba(0,0,0,.18);
+    box-shadow: 3px 3px 0 rgba(0,0,0,.12);
   }
-  .btn-analyse .btn-icon { font-size: 18px; }
-  .btn-analyse .btn-text { display: flex; flex-direction: column; }
-  .btn-analyse .btn-text strong { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
-  .btn-analyse .btn-text span { font-size: 10px; opacity: .7; margin-top: 1px; }
+  .btn-icon { font-size: 18px; }
+  .btn-text { display: flex; flex-direction: column; }
+  .btn-text strong {
+    font-family: 'Caveat', cursive;
+    font-size: 14px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .btn-text span {
+    font-family: 'Playfair Display', serif;
+    font-size: 10px;
+    opacity: .7;
+    margin-top: 1px;
+    font-style: italic;
+  }
 
   .btn-histoire   { background: var(--vert-bg);   color: var(--vert);   border-color: var(--vert); }
   .btn-territoire { background: var(--bleu-bg);   color: var(--bleu);   border-color: var(--bleu); }
@@ -247,51 +339,66 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 14px;
+    gap: 12px;
+    padding: 15px;
     border-radius: 6px;
     border: 2px solid var(--rouge);
     background: var(--rouge-bg);
     color: var(--rouge);
     text-decoration: none;
-    font-weight: 700;
-    font-size: 14px;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    transition: transform .15s, box-shadow .15s, background .15s;
+    transition: transform .15s, box-shadow .15s, background .2s, color .2s;
     width: 100%;
   }
   .btn-avenir:hover {
-    background: var(--rouge);
+    background: var(--terra);
+    border-color: var(--terra);
     color: white;
     transform: translateY(-2px);
-    box-shadow: 4px 4px 0 rgba(160,0,30,.25);
+    box-shadow: 4px 4px 0 rgba(139,46,6,.22);
   }
-
-  .divider {
-    border: none;
-    border-top: 1px solid #ddd;
-    margin: 20px 0;
+  .btn-avenir-text {
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
   }
+  .btn-avenir-sub {
+    font-family: 'Playfair Display', serif;
+    font-size: 10px;
+    font-style: italic;
+    opacity: .75;
+    display: block;
+    text-align: center;
+    margin-top: 1px;
+  }
+  .avenir-inner { display: flex; flex-direction: column; align-items: center; }
 </style>
 </head>
 <body>
 
 <header>
-  <div>
-    <h1>Atlas Vernaculaire — <span>Wallonie</span></h1>
-    <div class="header-sub">Région du Hainaut Central · Étude de cas</div>
+  <div class="header-left">
+    <h1>Atlas Vernaculaire — <em>Hainaut Central</em></h1>
+    <div class="header-sub">Étude de 7 cas</div>
   </div>
-  <div class="header-sub" style="text-align:right">Master Ingénieur Civil Architecte<br>TFE 2026</div>
+  <div class="header-right">Master Ingénieur Civil Architecte<br>TFE 2026</div>
 </header>
 
 <div id="map"></div>
 
+<!-- PANEL -->
 <div id="panel">
   <button class="panel-close" onclick="closePanel()" title="Fermer">✕</button>
-  <img id="panel-img" class="panel-cover" src="" alt=""
-       onerror="this.style.display='none'; document.getElementById('panel-cover-fallback').style.display='flex';">
-  <div id="panel-cover-fallback" class="panel-cover-fallback">❧</div>
+
+  <div class="panel-cover-zone">
+    <img id="panel-img" src="" alt=""
+         onerror="this.style.display='none'; document.getElementById('panel-img-fallback').style.display='flex';">
+    <div id="panel-img-fallback">
+      <span class="fallback-icon">🏠</span>
+      <span>Dessin à venir</span>
+    </div>
+  </div>
 
   <div class="panel-body">
     <div class="panel-tag" id="panel-commune">Virginal · Ittre</div>
@@ -318,10 +425,15 @@
       <div></div>
     </div>
 
-    <hr class="divider" style="margin-top:4px">
+    <hr class="divider" style="margin-top:6px">
     <div class="section-label">Synthèse projective</div>
     <a id="btn-avenir" class="btn-avenir" href="#" target="_blank">
-      <span>✦</span> AVENIR <span>→</span>
+      <span style="font-size:20px">✦</span>
+      <span class="avenir-inner">
+        <span class="btn-avenir-text">Avenir</span>
+        <span class="btn-avenir-sub">Réhabilitation & usage contemporain</span>
+      </span>
+      <span style="font-size:18px">→</span>
     </a>
   </div>
 </div>
@@ -332,13 +444,13 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiZWxvcnZ6IiwiYSI6ImNtcHZ0bGJieDFxbjcycnNldmRyM
 const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/outdoors-v12',
-  center: [4.1991, 50.6340],
+  center: [4.20201, 50.63358],
   zoom: 14,
   pitch: 40,
   bearing: -5
 });
 
-map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), 'bottom-right');
 
 const buildings = [
   {
@@ -349,8 +461,7 @@ const buildings = [
     materiaux: ['Brique locale', 'Pierre bleue de Soignies', 'Charpente chêne'],
     occupants: '4 occupants documentés (1875–2026)',
     synth: 'Maison de village en brique locale, implantée en bordure de la Rue Bruyère. Témoin des savoir-faire du Hainaut Central : appareillage soigné, pierre bleue de Soignies en seuil et linteaux, charpente en chêne de la région.',
-    lngLat: [4.1991, 50.6340],
-    // Image 3D dessinée — à remplacer par l'URL Drive de ton dessin axonométrique
+    lngLat: [4.20201, 50.63358],
     facadeUrl: 'https://ravezelo.github.io/Atlas-Vernaculaire-Hainaut-central/facade_virginal.png',
     links: {
       histoire:   'https://drive.google.com/file/d/1Zacab9WWccs5JM38gJQ3QXWosusPo7R8/view?usp=share_link',
@@ -369,17 +480,19 @@ buildings.forEach(b => {
   img.className = 'marker-img';
   img.src = b.facadeUrl;
   img.alt = b.name;
-  img.onerror = () => {
-    img.style.display = 'none';
-    const fallback = document.createElement('div');
-    fallback.style.cssText = 'width:80px;height:80px;background:#e8e0d4;border:2px solid #1C1C1C;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:24px;';
-    fallback.textContent = '🏠';
-    el.insertBefore(fallback, lbl);
-  };
 
   const lbl = document.createElement('div');
   lbl.className = 'marker-label';
   lbl.textContent = b.name;
+
+  img.onerror = () => {
+    img.replaceWith((() => {
+      const f = document.createElement('div');
+      f.className = 'marker-fallback';
+      f.textContent = '🏠';
+      return f;
+    })());
+  };
 
   el.appendChild(img);
   el.appendChild(lbl);
@@ -392,7 +505,7 @@ buildings.forEach(b => {
 
 function openPanel(b) {
   const pImg = document.getElementById('panel-img');
-  const pFallback = document.getElementById('panel-cover-fallback');
+  const pFallback = document.getElementById('panel-img-fallback');
   pImg.style.display = 'block';
   pFallback.style.display = 'none';
   pImg.src = b.facadeUrl;
@@ -401,8 +514,8 @@ function openPanel(b) {
   document.getElementById('panel-title').textContent = b.name;
   document.getElementById('panel-date').textContent = b.date + ' · ' + b.occupants;
 
-  const metaEl = document.getElementById('panel-meta');
-  metaEl.innerHTML = b.materiaux.map(m => `<span class="meta-chip">${m}</span>`).join('');
+  document.getElementById('panel-meta').innerHTML =
+    b.materiaux.map(m => `<span class="meta-chip">${m}</span>`).join('');
 
   document.getElementById('panel-synth').textContent = b.synth;
   document.getElementById('btn-histoire').href   = b.links.histoire;
